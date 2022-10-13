@@ -16,6 +16,7 @@ public:
 
 
 	void SetPosition(MyVec2D _pos);
+	void SetPosition(float _x = 0, float _y = 0, float _z = 0);
 	void SetVelocity(MyVec2D _vel);
 	void SetOrientation(MyVec2D _ori);
 };
