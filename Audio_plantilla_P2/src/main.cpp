@@ -62,9 +62,7 @@ float fDistSource = (heightWindowScreen * 0.25f); //a un cuarto del alto de la p
 float fDistListener = 100;
 MyVec2D middleScreen(weightWindowScreen * 0.5f, heightWindowScreen * 0.5f); //Static middle Screen
 
-//Rotacion CircleSource
-float rotationCurrentFrame = 0.f;
-float sourceSpeed = 75.f;
+float sourceSpeed = 55.f;
 float fDopplerFactor =1.f;
 float fGain = 325.f;
 
@@ -81,7 +79,7 @@ int main()
 		myWindow = (glfwCreateWindow(weightWindowScreen, heightWindowScreen, "HelloWorldWindowed", nullptr, nullptr));
 
 		//Cambiar nombre a la ventana
-		glfwSetWindowTitle(myWindow, "Audio_Practica1 FerCalderon");
+		glfwSetWindowTitle(myWindow, "Audio_Practica2 FerCalderon");
 
 		//Asociar contexto OpenGL a ventana
 		glfwMakeContextCurrent(myWindow);
@@ -105,6 +103,7 @@ int main()
 
 		//Carga de ficheros
 
+#pragma region AUDIO_STUFF
 
 		//CREATE BUFFER
 		AudioBuffer* myAudioBuffer = new AudioBuffer(audio_fileName);
@@ -119,6 +118,8 @@ int main()
 		//CREATE LISTENER
 		AudioListener* myAudioListener = new AudioListener(0, 0, 0);
 		myAudioListener->SetPosition(weightWindowScreen * 0.5f, heightWindowScreen - 200.f, 0.f);
+
+#pragma endregion AUDIO_STUFF
 
 
 
@@ -235,7 +236,7 @@ int main()
 
 #pragma endregion INPUT
 
-				//------------------   UPDATE LOGIC!------------------------------ //////////////////////////////////////////////////
+				//------------------   UPDATE	LOGIC! ------------------------------////////////////////////////////////////
 				//Posicion del raton
 				glfwGetCursorPos(myWindow, &mouseXpos, &mouseYpos);
 				myCursorPos.x = mouseXpos;
@@ -350,7 +351,8 @@ int main()
 
 		delete myAudioSource;
 		myAudioSource = nullptr;
-		myAudioBuffer = nullptr; //El delete de AudioBuffer se hace en el destructor del AudioSource (No es del todo buena idea por si varios AudioSources utilizasen el mismo buffer)
+		delete myAudioBuffer;
+		myAudioBuffer = nullptr; //DEPRECATED_El delete de AudioBuffer se hace en el destructor del AudioSource (No es del todo buena idea por si varios AudioSources utilizasen el mismo buffer)
 		delete myAudioListener;
 		myAudioListener = nullptr;
 
@@ -391,16 +393,12 @@ void CallbackUpdateSprite(Sprite& _sprite, float _fDeltaTime)
 		//Scale Update
 	_sprite.SetScale(_sprite.GetScale());
 
+
+#pragma region ROTATE_UPDATE
 	//Rotation Update
 
-	//@TODO: CORREGIR ROTATION
 	MyVec2D dir = (myCursorPos - _sprite.GetPosition());
 
-
-	//if (dir.Magnitude() >= fToleranceMovement)
-	//{
-	//	_sprite.m_bIsMoving = true;
-	//}
 	dir.Magnitude() >= fToleranceMovement ? _sprite.m_bIsMoving = true : _sprite.m_bIsMoving = false;
 
 
@@ -459,6 +457,10 @@ void CallbackUpdateSprite(Sprite& _sprite, float _fDeltaTime)
 
 	_sprite.SetRotation(newRotation);
 
+#pragma endregion ROTATE_UPDATE
+
+#pragma region POSITION_UPDATE
+
 	//Position Update
 	MyVec2D currentPos(_sprite.GetPosition());
 	dir.Normalize();
@@ -469,6 +471,8 @@ void CallbackUpdateSprite(Sprite& _sprite, float _fDeltaTime)
 		_sprite.SetPosition(newPos);
 
 	}
+	
+#pragma endregion ROTATE_UPDATE
 
 	//std::cout << "CallbackUpdateSprite \n";
 }

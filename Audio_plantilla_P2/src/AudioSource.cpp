@@ -41,8 +41,9 @@ AudioSource::~AudioSource()
 {
 	alDeleteSources(1, m_sourceBufferID);
 	m_sourceBufferID = nullptr;
-	delete m_audioBuffer;
 	m_audioBuffer = nullptr;
+	/*delete m_audioBuffer;
+	m_audioBuffer = nullptr;*/
 }
 
 void AudioSource::SetPitch(float _fPitch)
